@@ -135,7 +135,7 @@ serviceDeploy:
   ## serviceMonitor配置
   serviceMonitor:
     enabled: true
-    name: "settlement-service-monitor"
+    name: "settlement-service-stag"
     port: 2021
     interval: 30s
     scrapeTimeout: 10s
