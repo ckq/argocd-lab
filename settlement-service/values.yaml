@@ -1,0 +1,142 @@
+# 本文件声明要传递到模板中的变量
+serviceDeploy:
+  ## 服务名称，需要在单个集群中唯一
+  fullnameOverride: settlement-service-stag
+  ## deployment 部署配置
+
+  ### 定义服务的副本数
+  replicaCount: 1
+  ### 灰度
+  gray:
+    ### 是否开启灰度
+    enabled: false
+    ### 灰度镜像
+    image:
+      repository: ""
+      pullPolicy: IfNotPresent
+    ### 灰度副本数
+    replicaCount: 1
+  ### 定义服务的镜像地址
+  image:
+    #### 镜像仓库地址，建议通过云效流水线参数传入
+    repository: harbor-slave.quickcan.com/kkmh-prod/settlement-service-stag:a0e7c4d7f
+    #### 容器部署时拉取镜像的策略，默认为不存在则拉取，如无特殊需求不建议修改
+    pullPolicy: IfNotPresent
+  ### 容器资源配置，可根据实际需要修改，
+  resources:
+    limits:
+      cpu: 3000m
+      memory: 4Gi
+    requests:
+      cpu: 2000m
+      memory: 2Gi
+  ### 容器的label标签，建议按照服务树的规范定义
+  podLabels:
+    cop: kuaikan
+    owt: cbb
+    pdl: middle
+    servicegroup: settlement
+    service: settlement-service
+    cluster: stag
+    # 日志采集目标KafkaTopic
+    kafkaTopic: k8s_cbb_comic_settlement_stag
+  ### 注入到容器内的环境变量
+  containerEnv:
+    - name: APPLICATION
+      value: settlement-service
+    - name: PROFILE_ID
+      value: stag
+  ### 健康检测探针，配置方法可参考https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+  healthCheckProbe:
+    exec:
+      command:
+        - sh
+        - -c
+        - ./bin/health start
+    failureThreshold: 3
+    initialDelaySeconds: 120
+    periodSeconds: 6
+    successThreshold: 1
+    timeoutSeconds: 5
+  ### 容器亲和性配置，默认策略：同一服务的不同副本尽量打散调度到不同的节点上
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: service
+                  operator: In
+                  values:
+                    - settlement-service
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+  ### 容器调度选择器，默认关闭，如无特殊需求不用修改
+  nodeSelector: {}
+  ### 容器调度容忍策略，默认关闭，如无特殊需求不用修改
+  tolerations: []
+  ### 容器安全相关的配置，如无特殊需求不用修改
+  securityContext: {}
+  podSecurityContext: {}
+  ## service 配置，默认无需开启，如果ingress.enabled=true，则该service必须开启
+  service:
+    ### 是否开启service
+    enabled: true
+    ### service端口，可以理解为backend服务提供http服务的端口
+    port: 8080
+    ## service类型，如无特殊需求不用修改
+    type: ClusterIP
+  ## ingress 配置，可以理解为nginx配置，如果服务需要暴露到集群外提供HTTP服务，则需要配置，dubbo服务无需开启
+  ingress:
+    ### 是否开启ingress
+    enabled: false
+    ### ingress注释，可通过注释扩展一些功能，如无需求可不更改，具体使用参考https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    ### 域名以及location配置
+    hosts:
+      - host: stag.st.cn
+        paths:
+          - /
+    ### 开启https访问
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+  virtualservice:
+    ### 是否开启virtualservice
+    enabled: true
+    spec:
+      ### 配置下发到哪些Geteway中，一般情况框下使用默认值即可
+      gateways:
+        - istio-system/istio-ingressgateway
+      ### 访问服务使用到的域名，域名需要解析到Gateway前端的LB地址
+      hosts:
+        - api-settlement.quickcan.cn
+      http:
+        - match:
+            ### 定义路由到该服务的uri路径
+            - uri:
+                prefix: "/"
+            - uri:
+                prefix: "/location_b"
+          route:
+            - destination:
+                ### 路由到的目标service名称，同 fullnameOverride 值一致
+                host: settlement-service-stag.settlement-stag.svc.cluster.local
+                port:
+                  number: 8080
+  ## 自动扩缩配置，默认关闭，可根据需求开启
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+  ## serviceMonitor配置
+  serviceMonitor:
+    enabled: true
+    name: "settlement-service-monitor"
+    port: 2021
+    interval: 30s
+    scrapeTimeout: 10s
+    path: /prometheus

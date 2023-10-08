@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: settlement-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: settlement-service
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: settlement-service
+    repoURL: https://github.com/ckq/argocd-lab.git
+    targetRevision: HEAD
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+
+    automated:
+      selfHeal: true
+      prune: true
