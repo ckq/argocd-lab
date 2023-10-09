@@ -25,11 +25,9 @@ serviceDeploy:
   ### 容器资源配置，可根据实际需要修改，
   resources:
     limits:
-      cpu: 3000m
-      memory: 4Gi
+      memory: 500Mi
     requests:
-      cpu: 2000m
-      memory: 2Gi
+      memory: 200Mi
   ### 容器的label标签，建议按照服务树的规范定义
   podLabels:
     cop: kuaikan
