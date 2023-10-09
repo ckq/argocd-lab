@@ -19,7 +19,7 @@ serviceDeploy:
   ### 定义服务的镜像地址
   image:
     #### 镜像仓库地址，建议通过云效流水线参数传入
-    repository: harbor-slave.quickcan.com/kkmh-prod/settlement-service-stag:a0e7c4d7f
+    repository: gcr.io/heptio-images/ks-guestbook-demo
     #### 容器部署时拉取镜像的策略，默认为不存在则拉取，如无特殊需求不建议修改
     pullPolicy: IfNotPresent
   ### 容器资源配置，可根据实际需要修改，
