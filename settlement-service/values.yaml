@@ -25,8 +25,10 @@ serviceDeploy:
   ### 容器资源配置，可根据实际需要修改，
   resources:
     limits:
+      cpu: "1"
       memory: 500Mi
     requests:
+      cpu: "1"
       memory: 200Mi
   ### 容器的label标签，建议按照服务树的规范定义
   podLabels:
