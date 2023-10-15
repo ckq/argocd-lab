@@ -1,27 +1,25 @@
-apiVersion: networking.k8s.io/v1
+piVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: argocd-server-ingress
+  name: argocd-server-http-ingress
   namespace: argocd
   annotations:
-    nginx.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # 后端使用tls协议，设置代理后端服务器的代理协议类型，默认为 HTTP
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true" # 设置当前虚拟主机支持 HTTPS 请求时，是否将 HTTP 的请求强制跳转到 HTTPS 端口，全局默认为 true
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true" # ssl透传
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
-  ingressClassName: nginx    # 使用 nginx 的 IngressClass（关联的 ingress-nginx 控制器）
-  rules:     # 规则
-    - host: argocd.k8s.local    # 虚拟主机的FQDN
-      http:
+  ingressClassName: nginx
+  rules:
+    - http:
         paths:
           - path: /
-            pathType: Prefix    # Prefix前缀匹配
+            pathType: Prefix
             backend:
               service:
                 name: argocd-server
                 port:
-                  name: https
-  tls:    # 配置tls证书
+                  name: http
+      host: argocd.example.com
+  tls:
     - hosts:
-        - argocd.k8s.local
-      secretName: argocd-secret
+        - argocd.example.com
+      secretName: argocd-ingress-http
