@@ -22,4 +22,4 @@ spec:
   tls:
     - hosts:
         - argocd.example.com
-      secretName: argocd-ingress-http
+      secretName: argocd-secret
