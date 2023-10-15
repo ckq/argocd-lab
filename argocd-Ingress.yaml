@@ -18,7 +18,6 @@ spec:
                 name: argocd-server
                 port:
                   name: http
-                  number: 80
       host: argocd.k8s.local
   tls:
     - hosts:
