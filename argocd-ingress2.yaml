@@ -12,7 +12,7 @@ spec:
         paths:
           - backend:
               serviceName: argocd-server
-              servicePort: 80
+              servicePort: https
             path: /
   # This section is only required if TLS is to be enabled for the Ingress
   tls:
