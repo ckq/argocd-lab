@@ -24,4 +24,4 @@ spec:
   tls:    # 配置tls证书
     - hosts:
         - argocd.k8s.local
-      secretName: argocd-secret   "引用的secret"
+      secretName: argocd-secret
