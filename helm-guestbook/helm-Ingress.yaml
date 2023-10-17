@@ -21,7 +21,3 @@ spec:
                 name: helm-guestbook
                 port:
                   number: 80
-  tls:
-    - hosts:
-        - helm-guestbook.com
-      secretName: argocd-secret
