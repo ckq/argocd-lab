@@ -11,7 +11,7 @@ spec:
     - host: helm-guestbook.com
       http:
         paths:
-          - path: /
+          - path: /helm-guestbook
             pathType: Prefix
             backend:
               service:
