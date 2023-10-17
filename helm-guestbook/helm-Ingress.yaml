@@ -5,6 +5,8 @@ metadata:
   namespace: helm-guestbook
   annotations:
     INGRESS.kubernetes.io/rewrite-target: /
+  labels:
+    app.kubernetes.io/instance: helm-guestbook
 spec:
   ingressClassName: nginx
   rules:
