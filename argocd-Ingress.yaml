@@ -1,14 +1,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: argocd-server-http-ingress
+  name: argocd-server-ingress
   namespace: argocd
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
-  ingressClassName: nginx
   rules:
-    - http:
+    - host: monday.automan.fun
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -16,9 +20,8 @@ spec:
               service:
                 name: argocd-server
                 port:
-                  name: http
-      host: argocd-server.argocd.svc
+                  name: https
   tls:
     - hosts:
-        - argocd-server.argocd.svc
+        - monday.automan.fun
       secretName: argocd-secret
