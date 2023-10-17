@@ -4,10 +4,7 @@ metadata:
   name: helm-ingress
   namespace: helm-guestbook
   annotations:
-    kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    INGRESS.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
