@@ -14,4 +14,3 @@ spec:
       nodePort: 30010
   selector:
     app: redis-cluster
-    appCluster: redis-cluster
