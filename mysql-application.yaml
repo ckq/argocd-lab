@@ -11,7 +11,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: mysql-application
+    path: mysql
     repoURL: https://github.com/ckq/argocd-lab.git
     targetRevision: HEAD
 
