@@ -37,5 +37,5 @@ spec:
               mountPath: /var/lib/mysql
         volumes:
           - name: mysql-persistent-storage
-            persistentVolumeClaim:
-              claimName: mysql-pv-claim
+            emptyDir:
+              sizeLimit: 500Mi
