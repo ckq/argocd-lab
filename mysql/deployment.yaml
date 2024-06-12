@@ -6,24 +6,24 @@ spec:
   selector:
     matchLabels:
       app: mysql
-    template:
-      metadata:
-        labels:
-          app: mysql
-      spec:
-        containers:
-        - image: mysql:5.6
-          name: mysql
-          env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: password
-          ports:
-            - containerPort: 3306
-              name: mysql
-          volumeMounts:
-            - name: mysql-persistent-storage
-              mountPath: /var/lib/mysql
-        volumes:
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+          - containerPort: 3306
+            name: mysql
+        volumeMounts:
           - name: mysql-persistent-storage
-            emptyDir:
-              sizeLimit: 500Mi
+            mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          emptyDir:
+            sizeLimit: 500Mi
