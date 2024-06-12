@@ -5,9 +5,11 @@ metadata:
   labels:
     app: wordpress
 spec:
+  type: NodePort
   ports:
     - port: 3306
+      protocol: TCP
+      targetPort: 8080
   selector:
     app: wordpress
     tier: mysql
-  clusterIP: None
