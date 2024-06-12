@@ -5,15 +5,15 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: myapp
+      app: wordpress
   replicas: 2
   template:
     metadata:
       labels:
-        app: myapp
+        app: wordpress
     spec:
       containers:
-        - name: myapp
+        - name: wordpress
           image: nginx:latest
           ports:
             - containerPort: 8080
